@@ -1,0 +1,385 @@
+bplist00—_WebMainResource’	
+^WebResourceURL_WebResourceFrameName_WebResourceData_WebResourceMIMEType_WebResourceTextEncodingName_vhttps://raw.githubusercontent.com/TheDataMine/Elizabeth-McGuckin/master/hw17.ipynb?token=AKGUNQ2DQNAVMED4FR5RVI25ZIZYYPO!V<html><head></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Project 17"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Name: Elizabeth McGuckin"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Recall the 2018 election data, available here:\n",
+    "/depot/statclass/data/election2018/itcont.txt\n",
+    "and the data dictionary for this data, which is available here:\n",
+    "https://www.fec.gov/campaign-finance-data/contributions-individuals-\n",
+    "file-description/"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**1a.** Use the system command in R to read the data\n",
+    "     for the first 100,000 donations\n",
+    "     and store this data into a file called:  shortfile.txt\n",
+    "     (We use .txt instead of .csv because\n",
+    "      the file is not comma delimited.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "system(\"head -100000 /depot/statclass/data/election2018/itcont.txt &gt; shortfile.txt\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this line of code we are pulling data from a specific txt file. head-100000 shows the first 100,000 lines of data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**1b.** Use the read.csv command to read this data\n",
+    "      into a data frame in R, called:  myDF\n",
+    "     (Hint: check the help for read.csv:\n",
+    "      ?read.csv\n",
+    "      to remind yourself about the \"sep\" and\n",
+    "      the \"header\" parameters for read.csv.\n",
+    "      In particular, this data has \"|\" as the separator between\n",
+    "      the data elements, and it does not have a header.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "myDF = read.csv(\"shortfile.txt\",header=FALSE, sep=\"|\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Since the data does not have a header we do \"header=FALSE\" so that we do not give the data a false header. \"Sep\" separates the columns of data. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**1c.** Check the dimension of the resulting data frame.\n",
+    "     It should be 100,000 rows and 21 columns."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "&lt;ol class=list-inline&gt;\n",
+       "\t&lt;li&gt;100000&lt;/li&gt;\n",
+       "\t&lt;li&gt;21&lt;/li&gt;\n",
+       "&lt;/ol&gt;\n"
+      ],
+      "text/latex": [
+       "\\begin{enumerate*}\n",
+       "\\item 100000\n",
+       "\\item 21\n",
+       "\\end{enumerate*}\n"
+      ],
+      "text/markdown": [
+       "1. 100000\n",
+       "2. 21\n",
+       "\n",
+       "\n"
+      ],
+      "text/plain": [
+       "[1] 100000     21"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "dim(myDF)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "dim stands for dimension and checks how many row and columns there are."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**2a.** Split the data for these 100,000 donations according to the State\n",
+    "     from which the donation was given.\n",
+    "     Store the resulting data in a list called:  myresult\n",
+    "     (Hint: Check the data dictionary for the meanings of the columns,\n",
+    "      since we do not have column headers.)\n",
+    "     (Another hint:  Remember that we can refer to a column\n",
+    "                     of data in a data frame\n",
+    "                     by its number, for instance, myDF[[8]]\n",
+    "                     is the name of the donor.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "myResults=split(myDF[[15]],myDF[[10]])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\"Split\" lets us separate the State from donation amount. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**2b.** Check the names of myresult:\n",
+    "     names(myresult)\n",
+    "     We see the the first element of the list does not have a name.\n",
+    "     This is a pain!  To solve this,\n",
+    "     you can give it a name, for instance, by writing:\n",
+    "     names(myresult)[1] &lt;- \"unknown\"\n",
+    "     (or any other kind of name that you want,\n",
+    "      to indicate that the name is unknown)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "names(myResults)[1]&lt;-\"unknown\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We are labeling the missing mumber unknown here."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**3a.** Find the mean donation amount, according to each state."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "myMean&lt;-sapply(myResults, mean)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Here we are finding the mean donation amount"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**3b.** What is the mean donation from Hoosiers\n",
+    "     (i.e., for people from Indiana)?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "&lt;strong&gt;IN:&lt;/strong&gt; 367.914678899083"
+      ],
+      "text/latex": [
+       "\\textbf{IN:} 367.914678899083"
+      ],
+      "text/markdown": [
+       "**IN:** 367.914678899083"
+      ],
+      "text/plain": [
+       "      IN \n",
+       "367.9147 "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "myMean[\"IN\"]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Here we are finding the mean for Indiana."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**3c.** Find the standard deviation of the donation amount,\n",
+    "     according to each state."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "mySD&lt;-sapply(myResults, sd)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Here we are finding the standard deviation"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**3d.** Find the number of donations, according to each state."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "myDon&lt;-sapply(myResults, length)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Length allows us to see all of the donations for all of the states"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**3e.** For a sanity check, make sure that\n",
+    "     the number of donations in 3d adds up to 100,000 altogether."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "100000"
+      ],
+      "text/latex": [
+       "100000"
+      ],
+      "text/markdown": [
+       "100000"
+      ],
+      "text/plain": [
+       "[1] 100000"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "sum(myDon)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\"Sum\" allows us to see donations for all of the states"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "R",
+   "language": "R",
+   "name": "ir"
+  },
+  "language_info": {
+   "codemirror_mode": "r",
+   "file_extension": ".r",
+   "mimetype": "text/x-r-source",
+   "name": "R",
+   "pygments_lexer": "r",
+   "version": "3.4.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+</pre></body></html>Ztext/plainUUTF-8    ( 7 N ` v î"h"s                           "y
